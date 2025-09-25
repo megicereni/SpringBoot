@@ -1,7 +1,9 @@
-package com.project.inventory.entities;
+package com.example.inventory_api.entities;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -9,8 +11,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
-@ToString(exclude = "productList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -21,29 +21,22 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @Size(min = 2)
     @Column(name = "name")
     private String name;
 
-    @Nullable
+    @Size(max = 80,message = "Country's name can't be more than 80 characters" )
     @Column(name = "country")
     private String country;
 
-    @OneToMany(mappedBy = "brand",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    @OneToMany(mappedBy = "brand",orphanRemoval = true)
     private List<Product> productList=new ArrayList<>();
 
-    public Brand(String name, String country ){
-        this.name=name;
-        this.country=country;
-    }
 
-    public void addProduct(Product product){
-        productList.add(product);
-        product.setBrand(this);
-    }
 
     public void removeProduct(Product product){
         productList.remove(product);
-        product.setBrand(null);
     }
 
 }
