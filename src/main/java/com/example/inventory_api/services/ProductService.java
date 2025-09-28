@@ -103,7 +103,7 @@ public class ProductService {
     public void deleteProduct(Long brandID,Long productId){
         var brand=brandRepository.findById(brandID).orElse(null);
         var product=productRepository.findById(productId).orElse(null);
-        if(brand==null && product==null)
+        if(brand==null || product==null)
             throw new NotFoundException();
         brand.removeProduct(product);
         brandRepository.save(brand);
